@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <div class="description-container">
+            <div class="description">
+                Welcome to our portal! Our mission is to provide a centralized platform 
+                for accessing comprehensive information about all our products. From versions and prerequisites 
+                to detailed product information, our website simplifies the process of accessing essential details 
+                in one convenient portal. Whether you're a developer, a system administrator, or a curious enthusiast, 
+                our site offers a user-friendly experience to explore, compare, and stay up-to-date with our product offerings.
+            </div>
+        </div>
+        <button onclick="toggleProducts()" class="product-button button">Products</button>
+        <div class="product-container">
+            <div class="product">
+                <button onclick="fetchAndDisplayDataProduct('A4S')" class="button">A4S</button>
+            </div>
+            <div class="product">
+                <button onclick="fetchAndDisplayDataProduct('A4O')" class="button">A4O</button>
+            </div>
+            <div class="product">
+                <button onclick="fetchAndDisplayDataProduct('SCC')" class="button">SCC</button>
+            </div>
+            <div class="product">
+                <button onclick="fetchAndDisplayDataProduct('Angle-Pro')" class="button">Angle-Pro</button>
+            </div>
+        </div>
+        <div id="logsContainer"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/fetchAndDisplayData.js') }}"></script>
+    <div class="logo"></div>
+    <footer>
+        <p>Created and designed by Mainak.Chakrabarty@insightsoftware.com</p>
+    </footer>
+</body>
+</html>

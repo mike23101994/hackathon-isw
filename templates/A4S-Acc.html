@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/a4s-acc-styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4S Logs</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/fetchAndDisplayDataawsacc.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* Add custom CSS styles here */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            width: 125px;
+            background-color: #320348;
+            padding: 30px;
+            height: 50vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            animation: slideInLeft 1s ease-in-out;
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            width: 60%;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: text;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .pie-chart-container {
+            width: 50%;
+        }
+
+        .pie-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            max-width: 300px;
+            max-height: 300px;
+        }
+
+        .cpu-metrics-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .cpu-chart-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <form action="/product/A4S/A4S-Dev-Acc" method="GET">
+            <label for="customer">Select Customer:</label>
+            <select name="customer" id="customer">
+                {% for customer in customer_names %}
+                <option value="{{ customer }}" {% if customer == selected_customer %} selected {% endif %}>{{ customer }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Select">
+        </form>
+        <form id="customerForm" action="/product/A4S/A4S-Dev-Acc/Compare" method="GET">
+            <!-- Your form fields here -->
+            <input type="submit" value="All-CustomerInfo">
+        </form>
+        <form id="predictForm" action="/product/A4S/A4S-Dev-Acc/Predict" method="POST" onsubmit="return handlePredict(event)">
+            <!-- Include a hidden input field to store the selected customer -->
+            <input type="hidden" id="selectedCustomer" name="selected_customer" value="{{ selected_customer }}">
+            <input type="submit" value="Predict">
+        </form>   
+        <a href="/product/A4S/A4S-Dev-Acc/Predict/Display" class="btn-display">Display</a>  
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>Installed Software</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for software in installed_software %}
+                    <tr>
+                        <td>{{ software.Name }}</td>
+                        <td>{{ software.Version }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container">
+            <h2>System Updates</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Installed On</th>
+                        <th>HotFix ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for update in system_updates %}
+                    <tr>
+                        <td>{{ update.Description }}</td>
+                        <td>{{ update.InstalledOn }}</td>
+                        <td>{{ update.HotFixID }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container pie-chart-container">
+            <h2>Software Updates Overview</h2>
+            <div class="pie-chart">
+                <canvas id="softwareUpdatesChart"></canvas>
+            </div>
+            <div class="container cpu-chart-container">
+                <h2>CPU Metrics</h2>
+                <canvas id="cpuMetricsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+         // Check if the installedSoftwareCount and systemUpdatesCount are valid
+         var installedSoftwareCount = "{{ installed_software | length }}";
+        var systemUpdatesCount = "{{ system_updates | length }}";
+
+        // Render pie chart if data is available
+        if (installedSoftwareCount !== "undefined" && systemUpdatesCount !== "undefined") {
+            var ctxPie = document.getElementById('softwareUpdatesChart').getContext('2d');
+            var pieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Installed Software', 'System Updates'],
+                    datasets: [{
+                        label: 'Count',
+                        data: [installedSoftwareCount, systemUpdatesCount],
+                        backgroundColor: [
+                            'rgba(255, 120, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 150, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Software Updates Overview'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                        },
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('select[name="customer"]').change(function() {
+                var selectedCustomer = $(this).val(); // Get the selected customer
+                if (selectedCustomer) {
+                    $('.logsContainer').show(); // Show logs container if a customer is selected
+                } else {
+                    $('.logsContainer').hide(); // Hide logs container if no customer is selected
+                }
+            });
+        });
+
+        // Check if the cpumetric data is available
+        var cpumetricData = {{ cpumetric | safe }};
+        if (cpumetricData) {
+            var processNames = [];
+            var cpuUsages = [];
+
+            // Extract process names and CPU usages
+            cpumetricData.forEach(function(cpu) {
+                processNames.push(cpu.ProcessName);
+                cpuUsages.push(cpu.CPUUsage);
+            });
+
+            // Render bar chart for CPU metrics
+            var ctxBar = document.getElementById('cpuMetricsChart').getContext('2d');
+            var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: processNames,
+                datasets: [{
+                    label: 'CPU Usage',
+                    data: cpuUsages,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    barThickness: 'flex'
+                }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'CPU Usage by Process',
+                    font: {
+                        size: 18
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'CPU Usage (%)',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Process Name',
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeInOutQuart'
+            },
+            categorySpacing: 10 // Increase the space between the bars
+        }
+
+
+        });
+        }
+    </script>
+</body>
+</html>

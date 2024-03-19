@@ -1,0 +1,136 @@
+/* styles.css */
+
+body {
+    font-family: Open Sans, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: 
+        url('../assets/isw-logo.jpg') left top / 15% 15% no-repeat,
+        url('../assets/cloudcanvas-logo.jpeg') center center / cover no-repeat;
+}
+
+.logo {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    background-image: url('./isw-logo.jpg');
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+h1 {
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.button {
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    background-color: #0e84ce;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.product-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.product {
+    margin: 10px;
+}
+
+.description-container {
+    background-color: rgba(204, 163, 236, 0.8); /* Semi-transparent background color */
+    padding: 20px;
+    margin-bottom: 250px; /* Adjust the margin-bottom to bring it down */
+    border-radius: 10px;
+    animation: slide-in 1s ease forwards; /* Animation for the description box */
+}
+
+.description {
+    color: #333; /* Color for the description text */
+    font-size: 16px;
+    font-family: Arial, sans-serif; /* Font family for the description text */
+}
+
+.product-button {
+    position: fixed;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    z-index: 999; /* Ensure product button is above other content */
+}
+
+.product-container {
+    display: flex;
+    flex-direction: row-reverse; /* Reverse the direction to align buttons to the right */
+    overflow: hidden;
+    height: 100%;
+}
+
+.product {
+    margin: 10px;
+    display: flex;
+    animation: slide-in-horizontal 0.5s forwards; /* Animation for product buttons */
+}
+
+.product.hidden {
+    display: none;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-horizontal {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #093e6d;
+}

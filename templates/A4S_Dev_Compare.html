@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/a4s-dev-compare.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Software Versions</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Compare Software Versions</h1>
+        <div>
+            <button onclick="sortByKeyword('web')">Sort by Web</button>
+            <button onclick="sortByKeyword('etl')">Sort by ETL</button>
+            <button onclick="resetTable()">Show All</button>
+        </div>
+        <table id="comparisonTable">
+            <thead>
+                <tr id="headerRow">
+                    <th>Customer</th>
+                </tr>
+            </thead>
+            <tbody id="softwareData">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var data = JSON.parse('{{ data|tojson|safe }}');
+
+            var tableBody = document.getElementById('softwareData');
+            var headerRow = document.getElementById('headerRow');
+            var softwareNames = [];
+            data.forEach(function(entry) {
+                entry.installed_software.forEach(function(software) {
+                    if (!softwareNames.includes(software.Name)) {
+                        softwareNames.push(software.Name);
+                        var th = document.createElement('th');
+                        th.textContent = software.Name;
+                        headerRow.appendChild(th);
+                    }
+                });
+            });
+            data.forEach(function(entry) {
+                var row = document.createElement('tr');
+
+                var customerCell = document.createElement('td');
+                customerCell.textContent = entry.customer; 
+                row.appendChild(customerCell);
+                softwareNames.forEach(function(softwareName) {
+                    var version = '-';
+                    entry.installed_software.forEach(function(software) {
+                        if (software.Name === softwareName) {
+                            version = software.Version;
+                        }
+                    });
+                    var versionCell = document.createElement('td');
+                    versionCell.textContent = version;
+                    row.appendChild(versionCell);
+                });
+
+                tableBody.appendChild(row);
+            });
+        };
+
+        // Function to sort/filter table by keyword
+        function sortByKeyword(keyword) {
+            var tableBody = document.getElementById('softwareData');
+            var rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            rows.forEach(function(row) {
+                var customerName = row.querySelector('td').textContent.toLowerCase();
+                if (!customerName.includes(keyword)) {
+                    row.style.display = 'none';
+                } else {
+                    row.style.display = '';
+                }
+            });
+        }
+
+        // Function to reset table to show all data
+        function resetTable() {
+            var tableBody = document.getElementById('softwareData');
+            var rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            rows.forEach(function(row) {
+                row.style.display = '';
+            });
+        }
+    </script>
+</body>
+</html>

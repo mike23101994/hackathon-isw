@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/a4s-styles.css') }}">
+    <style>
+        /* Define animations */
+        @keyframes pop-up {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .block {
+            animation: pop-up 0.5s ease;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4S Logs</title>
+</head>
+<body>
+  <div id="logsContainer">
+    <h1>A4S Stack Info</h1>
+    <div class="block">
+        <a href="/product/A4S/A4S-Dev-Acc"><h2>A4S-Dev-Acc</h2></a>
+        <ul>
+        
+        </ul>
+    </div>
+    <div class="block">
+        <a href="/product/A4S/A4S-Demo-Acc"><h2>A4S-Demo-Acc</h2></a>
+        <ul>
+          
+        </ul>
+    </div>
+    <div class="block">
+        <a href="/product/A4S/A4S-Prod-Acc"><h2>A4S-Prod-Acc</h2></a>
+        <ul>
+         
+        </ul>
+    </div>
+  </div>
+
+</body>
+</html>

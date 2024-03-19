@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: 
+      url('../assets/ISW-Logo-Angles.jpg') left top / 15% 15% no-repeat,
+      url('../assets/cloudcanvas-logo.jpeg') center center / 100% 150% no-repeat;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 3em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+
+  /* Styles for blocks */
+.block {
+  margin: 20px; /* Adjust spacing between blocks */
+  background-color: rgba(176, 167, 237, 0.982); /* Semi-transparent white background */
+  border-radius: 10px;
+  padding: 20px;
+  animation: pop-out 0.5s ease;
+}
+
+@keyframes pop-out {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+
+
