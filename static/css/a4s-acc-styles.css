@@ -1,12 +1,11 @@
-/* Your existing CSS styles go here */
+
 html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background: 
     url('../assets/logo-no-background.png') right top / 15% 15% no-repeat,
-    url('../assets/dashboard-back2.jpg') 25% 25% / cover repeat; /* First background */
-     /* Second background */
+    url('../assets/dashboard-back2.jpg') 25% 25% / cover repeat; 
   color: rgb(196, 167, 239);
   height: 100vh;
   display: flex;

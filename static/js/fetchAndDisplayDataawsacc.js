@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     allCustomersButton.addEventListener('click', function() {
         console.log('Want for all customers button clicked.');
 
-        // Perform any desired actions here, such as submitting the form
         if (form) {
             form.submit();
         } else {
@@ -54,7 +53,6 @@ function handlePredict(event) {
         error: function(xhr, status, error) {
             // Handle error gracefully
             console.error("Error:", error);
-            // Optionally, display an error message to the user
             alert("An error occurred while processing your request. Please try again later.");
         }
     });
